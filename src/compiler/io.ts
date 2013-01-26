@@ -113,15 +113,22 @@ class FileWriter implements ITextWriter
 
     public WriteLine(text: string) : void
     {
+        bridge.Print("WriteLine");
+        bridge.Print(text);
         this.writer.WriteLine(text);
     }
 
     public Write(text: string): void 
     {
+        bridge.Print("Write");
+        bridge.Print(text);
         this.writer.Write(text);
     }
 
-    public Close(): void { }
+    public Close(): void {
+        bridge.Print("Writer.Close");
+        this.writer.Close();
+    }
 }
 
 class DebugTextWriter implements ITextWriter
@@ -156,13 +163,13 @@ class DummyFileWatcher implements IFileWatcher
         bridge.Print("IOImpl constructor");
         this.stderr = new DebugTextWriter();
         this.stdout = new DebugTextWriter();
-        this.arguments = ["C:/Users/MaMo/Documents/test1.ts", "C:/Users/MaMo/Documents/test2.ts", "--comments", "--declaration", "--out", "C:/Users/MaMo/Documents/test.txt"];
+        this.arguments = ["test.ts", "--comments", "--declaration", "--out", "test"];
 
         bridge.Print(this.arguments[0]);
     }
 
     readFile(path: string): string {
-        bridge.Print("readFile");
+        bridge.Print("readFile {0}", path);
         return bridge.ReadFile(path);
     }
 
@@ -186,16 +193,17 @@ class DummyFileWatcher implements IFileWatcher
 
     fileExists(path: string): bool {
         bridge.Print("fileExists");
-        return false;
+        return bridge.FileExists(path);
     }
 
     directoryExists(path: string): bool {
         bridge.Print("directoryExists");
-        return false;
+        return bridge.DirectoryExists(path);
     }
 
     createDirectory(path: string): void {
         bridge.Print("createDirectory");
+        bridge.CreateDirectory(path);
     }
     resolvePath(path: string): string {
         bridge.Print("resolvePath {0}", path);
@@ -203,7 +211,7 @@ class DummyFileWatcher implements IFileWatcher
     }
     dirName(path: string): string {
         bridge.Print("dirName {0}", path);
-        return path;
+        return bridge.DirName(path);
     }
 
     findFile(rootPath: string, partialFilePath: string): IResolvedFile {
@@ -232,7 +240,7 @@ class DummyFileWatcher implements IFileWatcher
 
     getExecutingFilePath(): string {
         bridge.Print("getExecutingFilePath");
-        return "C:/projects/bin";
+        return "<ExecutingPath>";
     }
     quit(exitCode?: number) {
         bridge.Print("quit");

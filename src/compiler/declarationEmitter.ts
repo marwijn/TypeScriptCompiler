@@ -15,6 +15,8 @@
 
 ///<reference path='typescript.ts' />
 
+declare var bridge: any;
+
 module TypeScript {
     export class DeclFileWriter {
         public onNewLine = true;
@@ -557,6 +559,7 @@ module TypeScript {
 
             if (pre) {
                 var className = classDecl.name.text;
+                bridge.AddClass(className);
                 this.emitDeclarationComments(classDecl);
                 this.emitDeclFlags(ToDeclFlags(classDecl.varFlags), "class");
                 this.declFile.Write(className);
