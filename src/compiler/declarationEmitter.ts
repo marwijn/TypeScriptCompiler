@@ -732,7 +732,7 @@ module TypeScript {
                 if (!isCurrentModuleDotted) {
                     this.emitDeclarationComments(moduleDecl);
                     this.declFile.Write(this.dottedModuleEmit);
-                    bridge.StartModule(moduleDecl.name.text);
+                    bridge.StartModule(this.dottedModuleEmit.substr(7));
                     this.declFile.WriteLine(" {");
                     this.indenter.increaseIndent();
                 }
