@@ -378,6 +378,7 @@ module TypeScript {
                 this.declFile.Write(": ");
                 this.emitTypeSignature(argDecl.type);
             }
+            bridge.AddArgument(argDecl.id.text, argDecl.type.getTypeName());
         }
 
         public FuncDeclCallback(pre: bool, funcDecl: FuncDecl): bool {
@@ -422,6 +423,7 @@ module TypeScript {
             if (funcDecl.isConstructor) {
                 this.emitIndent();
                 this.declFile.Write("constructor");
+                bridge.StartConstructor();
             }
             else {
                 var id = funcDecl.getNameText();
@@ -489,6 +491,8 @@ module TypeScript {
                 this.declFile.Write(": ");
                 this.emitTypeSignature(funcDecl.signature.returnType.type);
             }
+
+            bridge.EndFunction();
 
             this.declFile.WriteLine(";");
 
