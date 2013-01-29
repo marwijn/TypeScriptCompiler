@@ -384,7 +384,6 @@ module TypeScript {
             if (!pre) {
                 return false;
             }
-
             if (funcDecl.isAccessor()) {
                 return this.emitPropertyAccessorSignature(funcDecl);
             }
@@ -426,6 +425,7 @@ module TypeScript {
             }
             else {
                 var id = funcDecl.getNameText();
+                bridge.StartFunction(id);
                 if (!isInterfaceMember) {
                     this.emitDeclFlags(ToDeclFlags(funcDecl.fncFlags), "function");
                     this.declFile.Write(id);
@@ -559,7 +559,7 @@ module TypeScript {
 
             if (pre) {
                 var className = classDecl.name.text;
-                bridge.AddClass(className);
+                bridge.StartClass(className);
                 this.emitDeclarationComments(classDecl);
                 this.emitDeclFlags(ToDeclFlags(classDecl.varFlags), "class");
                 this.declFile.Write(className);
@@ -574,6 +574,7 @@ module TypeScript {
                 }
             } else {
                 this.indenter.decreaseIndent();
+                bridge.EndClass();
                 this.popDeclarationContainer(classDecl);
 
                 this.emitIndent();
@@ -658,6 +659,7 @@ module TypeScript {
         }
 
         public ModuleDeclarationCallback(pre: bool, moduleDecl: ModuleDeclaration): bool {
+
             if (hasFlag(moduleDecl.modFlags, ModuleFlags.IsWholeFile)) {
                 // This is dynamic modules and we are going to outputing single file, 
                 // we need to change the declFile because dynamic modules are always emitted to their corresponding .d.ts
@@ -730,11 +732,13 @@ module TypeScript {
                 if (!isCurrentModuleDotted) {
                     this.emitDeclarationComments(moduleDecl);
                     this.declFile.Write(this.dottedModuleEmit);
+                    bridge.StartModule(moduleDecl.name.text);
                     this.declFile.WriteLine(" {");
                     this.indenter.increaseIndent();
                 }
             } else {
                 if (!this.emitDottedModuleName()) {
+                    bridge.EndModule();
                     this.indenter.decreaseIndent();
                     this.emitIndent();
                     this.declFile.WriteLine("}");

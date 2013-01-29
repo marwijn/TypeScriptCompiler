@@ -163,7 +163,7 @@ class DummyFileWatcher implements IFileWatcher
         bridge.Print("IOImpl constructor");
         this.stderr = new DebugTextWriter();
         this.stdout = new DebugTextWriter();
-        this.arguments = ["test.ts", "--comments", "--declaration", "--out", "test"];
+        this.arguments = [bridge.SourceFile, "--comments", "--declaration", "--out", "test"];
 
         bridge.Print(this.arguments[0]);
     }
