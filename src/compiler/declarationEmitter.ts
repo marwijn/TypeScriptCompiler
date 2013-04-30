@@ -377,8 +377,8 @@ module TypeScript {
                 this.canEmitTypeAnnotationSignature(ToDeclFlags(funcDecl.fncFlags))) {
                 this.declFile.Write(": ");
                 this.emitTypeSignature(argDecl.type);
+                bridge.AddArgument(argDecl.id.text, argDecl.type.symbol.fullName());
             }
-            bridge.AddArgument(argDecl.id.text, argDecl.type.getTypeName());
         }
 
         public FuncDeclCallback(pre: bool, funcDecl: FuncDecl): bool {
