@@ -563,7 +563,7 @@ module TypeScript {
 
             if (pre) {
                 var className = classDecl.name.text;
-                bridge.StartClass(className);
+                bridge.StartType(className, false);
                 this.emitDeclarationComments(classDecl);
                 this.emitDeclFlags(ToDeclFlags(classDecl.varFlags), "class");
                 this.declFile.Write(className);
@@ -578,7 +578,7 @@ module TypeScript {
                 }
             } else {
                 this.indenter.decreaseIndent();
-                bridge.EndClass();
+                bridge.EndType();
                 this.popDeclarationContainer(classDecl);
 
                 this.emitIndent();
@@ -595,6 +595,7 @@ module TypeScript {
 
             if (pre) {
                 var interfaceName = interfaceDecl.name.text;
+                bridge.StartType(interfaceName, true);
                 this.emitDeclarationComments(interfaceDecl);
                 this.emitDeclFlags(ToDeclFlags(interfaceDecl.varFlags), "interface");
                 this.declFile.Write(interfaceName);
@@ -606,7 +607,7 @@ module TypeScript {
             } else {
                 this.indenter.decreaseIndent();
                 this.popDeclarationContainer(interfaceDecl);
-
+                bridge.EndType();
                 this.emitIndent();
                 this.declFile.WriteLine("}");
             }
